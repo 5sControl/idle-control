@@ -5,9 +5,38 @@ import cv2
 import httplib2
 import time
 
-password = os.environ.get("password")
 username = os.environ.get("username")
+password = os.environ.get("password")
 camera_url = os.environ.get("camera_url")
+areas = os.environ.get("areas")
+
+# mocks
+# username = 'admin'
+# password = 'just4Taqtile'
+# camera_url = 'http://192.168.1.64/onvif-http/snapshot?Profile_1'
+# areas = [
+#     {
+#         "itemId": 1,
+#         "coords": [{
+#             "x1": 123,
+#             "x2": 232,
+#             "y1": 213,
+#             "y2": 232
+#         }],
+#         "itemName": "Item name 1"
+#     },
+#     {
+#         "itemId": 2,
+#         "coords": [{
+#             "x1": 333,
+#             "x2": 444,
+#             "y1": 111,
+#             "y2": 232
+#         }],
+#         "itemName": "Item name 2"
+#     }
+# ]
+
 h = httplib2.Http(".cache")
 h.add_credentials(username, password)
 
@@ -35,6 +64,7 @@ def run():
         scores = predictions[:, 4]
         categories = predictions[:, 5]
         print(categories, 'categories')
+
 
 if __name__ == '__main__':
     run()
