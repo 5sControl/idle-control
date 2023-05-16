@@ -2,13 +2,6 @@ import os
 import time
 from functional import *
 
-
-os.environ['password'] = 'just4Taqtile'
-os.environ['username'] = 'admin'
-os.environ['camera_url'] = 'http://192.168.1.163/onvif-http/snapshot?Profile_1' 
-os.environ['server_url'] = '192.168.1.999'
-os.environ['folder'] = 'images/192.168.1.163'
-
 def run():
     h = init_connection()
     model = init_model()
