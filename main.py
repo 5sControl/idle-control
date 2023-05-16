@@ -1,40 +1,30 @@
 import os
-import yolov7
-import numpy as np
-import cv2
-import httplib2
 import time
+from functional import *
 
-password = os.environ.get("password")
-username = os.environ.get("username")
-camera_url = os.environ.get("camera_url")
-h = httplib2.Http(".cache")
-h.add_credentials(username, password)
 
-model = yolov7.load('yolov7.pt')
-# set model parameters
-model.conf = 0.25  # NMS confidence threshold
-model.iou = 0.45  # NMS IoU threshold
-model.classes = None  # (optional list) filter by class
-
+os.environ['password'] = 'just4Taqtile'
+os.environ['username'] = 'admin'
+os.environ['camera_url'] = 'http://192.168.1.163/onvif-http/snapshot?Profile_1' 
+os.environ['server_url'] = '192.168.1.999'
+os.environ['folder'] = 'images/192.168.1.163'
 
 def run():
+    h = init_connection()
+    model = init_model()
+
     while True:
-        time.sleep(1)
-        resp, content = h.request(camera_url, "GET", body="foobar")
-        if resp.status == 200:
-            nparr = np.frombuffer(content, np.uint8)
-            img0 = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        else:
-            print('Error: Could not retrieve image')
+        img0 = get_frame(h)
+        if get_frame(h) is None:
             continue
+    
+        boxes, scores, categories = predict(model, img0)
+        img0 = put_rectangle(img0, boxes, scores)
 
-        results = model(img0)
-        predictions = results.pred[0]
-        boxes = predictions[:, :4]  # x1, y1, x2, y2
-        scores = predictions[:, 4]
-        categories = predictions[:, 5]
-        print(categories, 'categories')
+        if len(categories):
+            send_report_and_save_photo(img0)
 
+        time.sleep(1)
+            
 if __name__ == '__main__':
     run()
