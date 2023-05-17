@@ -5,6 +5,7 @@ import datetime
 import pathlib
 
 import cv2
+import torch
 import yolov7
 import requests
 import httplib2
@@ -14,10 +15,15 @@ import numpy as np
 def init_connection():
     password =  os.environ.get("password")
     username =  os.environ.get("username")
+    
+    try:
+        h = httplib2.Http(".cache")
+        h.add_credentials(username, password)
+        return h
+    except Exception as exc:
+        print(exc)
 
-    h = httplib2.Http(".cache")
-    h.add_credentials(username, password)
-    return h
+    return None
 
 
 def init_model():
@@ -31,18 +37,22 @@ def init_model():
 
 
 def get_frame(h):
-    resp, content = h.request(os.environ.get("camera_url"), "GET", body="foobar")
-    if resp.status == 200:
-        nparr = np.frombuffer(content, np.uint8)
-        img0 = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        return img0
+    try:
+        resp, content = h.request(os.environ.get("camera_url"), "GET", body="foobar")
+        if resp.status == 200: # TODO: check if this condition can be false at all
+            nparr = np.frombuffer(content, np.uint8)
+            img0 = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            return img0
+    except Exception as exc:
+        print(exc)
     return None
 
 
+@torch.no_grad()
 def predict(model, img):
     results = model(img)
     predictions = results.pred[0].cpu().detach().numpy()
-    boxes = predictions[:, :4]  # x1, y1, x2, y2
+    boxes = predictions[:, :4]  # x1, y1, x2, y2 # TODO: check numpy.split and get something like boxes,scores,cats = np.split(...
     scores = predictions[:, 4]
     categories = predictions[:, 5]
     return boxes, scores, categories

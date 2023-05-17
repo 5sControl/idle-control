@@ -3,3 +3,4 @@
 images/
 *.pt
 env/
+__pycache__
