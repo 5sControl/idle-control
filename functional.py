@@ -15,13 +15,13 @@ import numpy as np
 def init_connection():
     password =  os.environ.get("password")
     username =  os.environ.get("username")
-    
+
     try:
         h = httplib2.Http(".cache")
         h.add_credentials(username, password)
         return h
     except Exception as exc:
-        print(exc)
+        print('init_connection:', exc)
 
     return None
 
@@ -38,13 +38,16 @@ def init_model():
 
 def get_frame(h):
     try:
-        resp, content = h.request(os.environ.get("camera_url"), "GET", body="foobar")
+        camera = os.environ.get("camera_url")
+        print('camera=', camera)
+        resp, content = h.request(camera, "GET", body="foobar")
+        print('status=', resp.status)
         if resp.status == 200: # TODO: check if this condition can be false at all
             nparr = np.frombuffer(content, np.uint8)
             img0 = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
             return img0
     except Exception as exc:
-        print(exc)
+        print('get_frame: ', exc)
     return None
 
 
@@ -85,6 +88,6 @@ def send_report_and_save_photo(img0):
     try:
         r = requests.post(url=f'{server_url}:80/api/reports/report-with-photos/', json=report_for_send)
     except Exception as exc:
-        print(exc, 'exc')
+        print('end_report_and_save_photo:', exc)
         pass
     
