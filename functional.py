@@ -77,8 +77,9 @@ def send_report_and_save_photo(img0):
     save_photo_url = f'{folder}/' + str(uuid.uuid4()) + '.jpg'
     cv2.imwrite(save_photo_url, img0)
     photo_date = str(datetime.datetime.now())
+
     report_for_send = {
-                'camera': camera_url,
+                'camera': folder.split('/')[1],
                 'algorithm': 'idle_control',
                 'start_tracking': photo_date,
                 'stop_tracking': photo_date,
