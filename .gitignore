@@ -4,3 +4,4 @@ images/
 *.pt
 env/
 __pycache__
+.env

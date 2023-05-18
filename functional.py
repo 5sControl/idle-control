@@ -3,6 +3,7 @@ import os
 import uuid
 import datetime
 import pathlib
+import logging
 
 import cv2
 import torch
@@ -15,21 +16,18 @@ import numpy as np
 def init_connection():
     password =  os.environ.get("password")
     username =  os.environ.get("username")
-
     try:
         h = httplib2.Http(".cache")
         h.add_credentials(username, password)
         return h
     except Exception as exc:
-        print('init_connection:', exc)
-
+        logging.error('init connection:\n' + str(exc))
     return None
 
 
 def init_model():
     model = yolov7.load('yolov7x.pt')
 
-    # set model parameters
     model.conf = 0.15  # NMS confidence threshold
     model.iou = 0.45  # NMS IoU threshold
     model.classes = [67]  # (optional list) filter by class
@@ -38,16 +36,12 @@ def init_model():
 
 def get_frame(h):
     try:
-        camera = os.environ.get("camera_url")
-        print('camera=', camera)
-        resp, content = h.request(camera, "GET", body="foobar")
-        print('status=', resp.status)
-        if resp.status == 200: # TODO: check if this condition can be false at all
-            nparr = np.frombuffer(content, np.uint8)
-            img0 = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-            return img0
+        _, content = h.request(os.environ.get("camera_url"), "GET", body="foobar")
+        nparr = np.frombuffer(content, np.uint8)
+        img0 = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        return img0
     except Exception as exc:
-        print('get_frame: ', exc)
+        logging.error('get frame:\n' + str(exc))
     return None
 
 
@@ -55,9 +49,7 @@ def get_frame(h):
 def predict(model, img):
     results = model(img)
     predictions = results.pred[0].cpu().detach().numpy()
-    boxes = predictions[:, :4]  # x1, y1, x2, y2 # TODO: check numpy.split and get something like boxes,scores,cats = np.split(...
-    scores = predictions[:, 4]
-    categories = predictions[:, 5]
+    boxes, scores, categories = np.hsplit(predictions, (4, -1))
     return boxes, scores, categories
 
 
@@ -69,26 +61,27 @@ def put_rectangle(img, boxes, scores):
 
 
 def send_report_and_save_photo(img0):
-    camera_url = os.environ.get("camera_url")
     server_url =  os.environ.get("server_url")
     folder =  os.environ.get("folder")
 
     pathlib.Path(folder).mkdir(exist_ok=True, parents=True)
     save_photo_url = f'{folder}/' + str(uuid.uuid4()) + '.jpg'
     cv2.imwrite(save_photo_url, img0)
-    photo_date = str(datetime.datetime.now())
+
+    time_delta_seconds = 10
+    start_tracking = str(datetime.datetime.now())
+    stop_tracking = str(datetime.datetime.now() + datetime.timedelta(0, time_delta_seconds))
 
     report_for_send = {
                 'camera': folder.split('/')[1],
                 'algorithm': 'idle_control',
-                'start_tracking': photo_date,
-                'stop_tracking': photo_date,
-                'photos': [{'image': save_photo_url, 'date': photo_date}],
+                'start_tracking': start_tracking,
+                'stop_tracking': stop_tracking,
+                'photos': [{'image': save_photo_url, 'date': start_tracking}],
                 'violation_found': True,
             }
     try:
-        r = requests.post(url=f'{server_url}:80/api/reports/report-with-photos/', json=report_for_send)
+        requests.post(url=f'{server_url}:80/api/reports/report-with-photos/', json=report_for_send)
     except Exception as exc:
-        print('end_report_and_save_photo:', exc)
-        pass
+        logging.error('send report:\n' + str(exc))
     
