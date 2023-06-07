@@ -1,5 +1,6 @@
 import time
 from functional import *
+import os
 
 def run():
     while (h := init_connection()) is None:
@@ -7,7 +8,7 @@ def run():
 
     model = init_model()
     while True:
-        time.sleep(1)
+        time.sleep(2)
         if (img := get_frame(h)) is None: continue
         boxes, scores, categories = predict(model, img)
         img = put_rectangle(img, boxes, scores)

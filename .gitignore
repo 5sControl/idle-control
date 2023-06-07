@@ -1,6 +1,7 @@
 .cache
 .idea/
 images/
+models/
 *.pt
 env/
 __pycache__

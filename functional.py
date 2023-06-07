@@ -7,10 +7,12 @@ import logging
 
 import cv2
 import torch
-import yolov7
 import requests
 import httplib2
 import numpy as np
+
+from super_gradients.training import models
+from super_gradients.common.object_names import Models
 
 
 def init_connection():
@@ -26,11 +28,7 @@ def init_connection():
 
 
 def init_model():
-    model = yolov7.load('yolov7x.pt')
-
-    model.conf = 0.15  # NMS confidence threshold
-    model.iou = 0.45  # NMS IoU threshold
-    model.classes = [67]  # (optional list) filter by class
+    model = models.get(Models.YOLO_NAS_M, pretrained_weights="coco")
     return model
 
 
@@ -47,9 +45,11 @@ def get_frame(h):
 
 @torch.no_grad()
 def predict(model, img):
-    results = model(img)
-    predictions = results.pred[0].cpu().detach().numpy()
-    boxes, scores, categories = np.hsplit(predictions, (4, -1))
+    pred = next(model.predict(img)._images_prediction_lst)
+
+    boxes, scores, categories = pred.prediction.bboxes_xyxy.astype(np.uint16), pred.prediction.confidence, pred.prediction.labels.astype(np.uint16)
+    mask, = np.where(categories == 67.)
+    boxes, scores, categories = boxes[mask], scores[mask], categories[mask]
     return boxes, scores, categories
 
 
