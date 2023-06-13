@@ -26,7 +26,7 @@ def init_connection():
 
 
 def init_model():
-    model = ObjDetectionModel("yolov8l.pt", 0.5, 0.5)
+    model = ObjDetectionModel("yolov8l.pt", 0.3, 0.5)
     return model
 
 
@@ -48,6 +48,13 @@ def put_rectangle(img, boxes, scores):
         cv2.putText(img, str(score), (x1, y1),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
     return img
+
+
+def check_coordinates_diffs(coords_1: np.array, coords_2: np.array, threshold=20):
+    if coords_1 is None:
+        return True
+    diff = np.abs(coords_1 - coords_2).sum()
+    return diff > threshold
 
 
 def send_report_and_save_photo(img0):
