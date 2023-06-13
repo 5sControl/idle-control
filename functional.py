@@ -6,7 +6,6 @@ import pathlib
 import logging
 
 import cv2
-import torch
 import requests
 import httplib2
 import numpy as np
