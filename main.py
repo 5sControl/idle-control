@@ -1,6 +1,7 @@
 import time
 from functional import *
-import os
+from dotenv import load_dotenv
+
 
 def run():
     while (h := init_connection()) is None:
@@ -9,11 +10,15 @@ def run():
     model = init_model()
     while True:
         time.sleep(2)
-        if (img := get_frame(h)) is None: continue
-        boxes, scores, categories = predict(model, img)
-        img = put_rectangle(img, boxes, scores)
+        if (img := get_frame(h)) is None:
+            continue
+        boxes, scores = model(img)
+        img = put_rectangle(img, boxes.numpy(), scores.numpy())
 
-        if len(categories): send_report_and_save_photo(img)
-            
-if __name__ == '__main__':
-    run()
+        print(scores)
+        if len(scores) > 0:
+            send_report_and_save_photo(img)
+
+
+load_dotenv("confs/settings.env")
+run()
