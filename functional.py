@@ -4,12 +4,30 @@ import uuid
 import datetime
 import pathlib
 import logging
-
+import colorlog
 import cv2
 import requests
 import httplib2
 import numpy as np
 from ObjectDetectionModel import ObjDetectionModel
+
+
+def create_logger():
+    logger = logging.getLogger('min_max_logger')
+    handler = colorlog.StreamHandler()
+    handler.setFormatter(colorlog.ColoredFormatter(
+        '%(log_color)s%(asctime)s %(levelname)s: %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S',
+        log_colors={
+            'DEBUG': 'cyan',
+            'INFO': 'green',
+            'WARNING': 'yellow',
+            'CRITICAL': 'bold_red,bg_white',
+        }))
+    logger.addHandler(handler)
+    logger.setLevel(logging.DEBUG)
+    logger.propagate = False
+    return logger
 
 
 def init_connection():
@@ -37,8 +55,7 @@ def get_frame(h):
         img0 = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         return img0
     except Exception as exc:
-        logging.error('get frame:\n' + str(exc))
-    return None
+        return None
 
 
 def put_rectangle(img, boxes, scores):
