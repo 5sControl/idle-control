@@ -1,7 +1,7 @@
 FROM python:3.10
 RUN apt-get update
+RUN pip install torch==1.13.1+cpu torchvision==0.14.1+cpu --extra-index-url https://download.pytorch.org/whl/cpu
 COPY requirements.txt .
-COPY models/yolo_nas_m_coco.pth root/.cache/torch/hub/checkpoints/
 RUN pip install -r requirements.txt
 RUN apt-get install ffmpeg libsm6 libxext6  -y
 
