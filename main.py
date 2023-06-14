@@ -19,6 +19,7 @@ def run():
             logger.info("60 iterations was passed")
         if (img := get_frame(h)) is None:
             logger.warning("Empty photo")
+            time.sleep(4)
             continue
         time.sleep(3)
         preds, scores = model(img)
