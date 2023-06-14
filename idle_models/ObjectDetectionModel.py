@@ -3,11 +3,11 @@ import torch
 
 
 class ObjDetectionModel:
-    def __init__(self, path: str, conf_thresh, iou_thresh) -> None:
+    def __init__(self, path: str, conf_thresh, iou_thresh, classes) -> None:
         self.model = YOLO(path)
         self.conf_thresh = conf_thresh
         self.iou_thresh = iou_thresh
-        self.classes = [67]
+        self.classes = classes
 
     @torch.no_grad()
     def __call__(self, img) -> list:
