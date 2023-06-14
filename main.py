@@ -10,7 +10,7 @@ def run():
         logger.warning("Cannot create connection")
         time.sleep(1)
     model = init_model()
-    logger.info("Model is initialized")
+    logger.info("Model initialized")
     prev_preds = None
     iter_idx = 0
     while True:
@@ -20,7 +20,7 @@ def run():
         if (img := get_frame(h)) is None:
             logger.warning("Empty photo")
             continue
-        time.sleep(0.1)
+        time.sleep(3)
         preds, scores = model(img)
         img = put_rectangle(img, preds.numpy(), scores.numpy())
         if len(scores) > 0:

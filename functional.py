@@ -1,4 +1,4 @@
-
+from confs.load_configs import *
 import os
 import uuid
 import datetime
@@ -9,7 +9,9 @@ import cv2
 import requests
 import httplib2
 import numpy as np
-from ObjectDetectionModel import ObjDetectionModel
+from idle_models.ObjectDetectionModel import ObjDetectionModel
+import time
+from dotenv import load_dotenv
 
 
 def create_logger():
@@ -32,6 +34,9 @@ def create_logger():
 
 def init_connection():
     password = os.environ.get("password")
+    if password is None:
+        load_dotenv("confs/settings.env")
+        password = os.environ.get("password")
     username = os.environ.get("username")
     try:
         h = httplib2.Http(".cache")
@@ -43,7 +48,7 @@ def init_connection():
 
 
 def init_model():
-    model = ObjDetectionModel("yolov8l.pt", 0.3, 0.5)
+    model = ObjDetectionModel(MODEL_PATH, CONF_THRES, IOU_THRES, CLASSES)
     return model
 
 
@@ -66,7 +71,7 @@ def put_rectangle(img, boxes, scores):
     return img
 
 
-def check_coordinates_diffs(coords_1: np.array, coords_2: np.array, threshold=20):
+def check_coordinates_diffs(coords_1: np.array, coords_2: np.array, threshold=THRESHOLD):
     if coords_1 is None:
         return True
     diff = np.abs(coords_1 - coords_2).sum()
@@ -81,10 +86,10 @@ def send_report_and_save_photo(img0):
     save_photo_url = f'{folder}/' + str(uuid.uuid4()) + '.jpg'
     cv2.imwrite(save_photo_url, img0)
 
-    time_delta_seconds = 10
+    time_delta_seconds = WAIT_TIME
     start_tracking = str(datetime.datetime.now())
-    stop_tracking = str(datetime.datetime.now() +
-                        datetime.timedelta(0, time_delta_seconds))
+    time.sleep(time_delta_seconds)
+    stop_tracking = str(datetime.datetime.now())
 
     report_for_send = {
         'camera': folder.split('/')[1],
