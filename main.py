@@ -25,9 +25,10 @@ def run():
         preds, scores = model(img)
         img = put_rectangle(img, preds.numpy(), scores.numpy())
         if len(scores) > 0:
+            start_tracking = datetime.datetime.now()
             logger.info("Telephone was detected")
             if check_coordinates_diffs(prev_preds, preds):
-                send_report_and_save_photo(img)
+                send_report_and_save_photo(img, start_tracking)
             prev_preds = preds
 
 

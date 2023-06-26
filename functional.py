@@ -78,7 +78,7 @@ def check_coordinates_diffs(coords_1: np.array, coords_2: np.array, threshold=TH
     return diff > threshold
 
 
-def send_report_and_save_photo(img0):
+def send_report_and_save_photo(img0, start_track_time):
     server_url = os.environ.get("server_url")
     folder = os.environ.get("folder")
 
@@ -86,17 +86,15 @@ def send_report_and_save_photo(img0):
     save_photo_url = f'{folder}/' + str(uuid.uuid4()) + '.jpg'
     cv2.imwrite(save_photo_url, img0)
 
-    time_delta_seconds = WAIT_TIME
-    start_tracking = str(datetime.datetime.now())
-    time.sleep(time_delta_seconds)
+    time.sleep(WAIT_TIME)
     stop_tracking = str(datetime.datetime.now())
 
     report_for_send = {
         'camera': folder.split('/')[1],
         'algorithm': 'idle_control',
-        'start_tracking': start_tracking,
+        'start_tracking': start_track_time,
         'stop_tracking': stop_tracking,
-        'photos': [{'image': save_photo_url, 'date': start_tracking}],
+        'photos': [{'image': save_photo_url, 'date': start_track_time}],
         'violation_found': True,
     }
     try:
