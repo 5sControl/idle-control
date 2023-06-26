@@ -9,7 +9,7 @@ import cv2
 import requests
 import httplib2
 import numpy as np
-from idle_models.ObjectDetectionModel import ObjDetectionModel
+from idle_models.IdleObjectDetectionModelPipeline import IdleObjectDetectionModelPipeline
 import time
 from dotenv import load_dotenv
 
@@ -48,17 +48,19 @@ def init_connection():
 
 
 def init_model():
-    model = ObjDetectionModel(MODEL_PATH, CONF_THRES, IOU_THRES, CLASSES)
+    model = IdleObjectDetectionModelPipeline(
+        FIRST_MODEL_PATH, SECOND_MODEL_PATH, CONF_THRES, IOU_THRES, CLASSES)
     return model
 
 
 def get_frame(h):
     try:
-        _, content = h.request(os.environ.get(
+         _, content = h.request(os.environ.get(
             "camera_url"), "GET", body="foobar")
+        time_ = datetime.datetime.now()
         nparr = np.frombuffer(content, np.uint8)
-        img0 = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        return img0
+        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        return img, time_
     except Exception as exc:
         return None
 
