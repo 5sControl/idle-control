@@ -1,8 +1,9 @@
 from ultralytics import YOLO
 import torch
+import numpy as np
 
 
-class ObjDetectionModel:
+class IdleObjectDetectionModel:
     def __init__(self, path: str, conf_thresh, iou_thresh, classes) -> None:
         self.model = YOLO(path)
         self.conf_thresh = conf_thresh
@@ -19,4 +20,5 @@ class ObjDetectionModel:
             classes=self.classes,
             verbose=False
         )[0].boxes
+        print(results.conf)
         return results.xyxy, results.conf
