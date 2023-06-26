@@ -4,7 +4,8 @@
     ],
     "iou_thres": 0.5,
     "conf_thres": 0.3,
-    "model_path": "idle_models/idle_v0.3.11.pt",
+    "first_model_path": "idle_models/idle1_v0.3.11.pt",
+    "second_model_path": "idle_models/idle2_v0.3.11.pt",
     "wait_time": 5,
     "threshold": 100
 }
