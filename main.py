@@ -19,8 +19,9 @@ def run():
             logger.info("60 iterations was passed")
         if (img := get_frame(h)) is None:
             logger.warning("Empty photo")
+            time.sleep(1)
             continue
-        time.sleep(3)
+        time.sleep(2)
         preds, scores = model(img)
         img = put_rectangle(img, preds.numpy(), scores.numpy())
         if len(scores) > 0:

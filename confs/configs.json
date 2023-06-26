@@ -5,6 +5,6 @@
     "iou_thres": 0.5,
     "conf_thres": 0.3,
     "model_path": "idle_models/idle_v0.3.11.pt",
-    "wait_time": 10,
+    "wait_time": 5,
     "threshold": 100
 }
