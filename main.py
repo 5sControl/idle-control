@@ -17,7 +17,8 @@ def run():
         iter_idx += 1
         if iter_idx % 60 == 0:
             logger.info("60 iterations was passed")
-        if (img := get_frame(h)) is None:
+        img, start_tracking = get_frame(h)
+        if img is None:
             logger.warning("Empty photo")
             time.sleep(1)
             continue
@@ -25,7 +26,6 @@ def run():
         preds, scores = model(img)
         img = put_rectangle(img, preds.numpy(), scores.numpy())
         if len(scores) > 0:
-            start_tracking = datetime.datetime.now()
             logger.info("Telephone was detected")
             if check_coordinates_diffs(prev_preds, preds):
                 send_report_and_save_photo(img, start_tracking)
