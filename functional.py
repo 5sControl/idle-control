@@ -10,6 +10,7 @@ import requests
 import httplib2
 import numpy as np
 from idle_models.IdleObjectDetectionModelPipeline import IdleObjectDetectionModelPipeline
+from idle_models.IdleObjectDetectionModel import IdleObjectDetectionModel
 import time
 from dotenv import load_dotenv
 
@@ -49,13 +50,19 @@ def init_connection():
 
 def init_model():
     model = IdleObjectDetectionModelPipeline(
-        FIRST_MODEL_PATH, SECOND_MODEL_PATH, CONF_THRES, IOU_THRES, CLASSES)
+        [
+            IdleObjectDetectionModel(
+                FIRST_MODEL_PATH, CONF_THRES_1, IOU_THRES, CLASSES),
+            IdleObjectDetectionModel(
+                SECOND_MODEL_PATH, CONF_THRES_2, IOU_THRES, [0])
+        ]
+    )
     return model
 
 
 def get_frame(h):
     try:
-         _, content = h.request(os.environ.get(
+        _, content = h.request(os.environ.get(
             "camera_url"), "GET", body="foobar")
         time_ = datetime.datetime.now()
         nparr = np.frombuffer(content, np.uint8)

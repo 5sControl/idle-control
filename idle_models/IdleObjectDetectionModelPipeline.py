@@ -5,14 +5,9 @@ from idle_models.IdleObjectDetectionModel import IdleObjectDetectionModel
 
 
 class IdleObjectDetectionModelPipeline:
-    def __init__(self, first_model_path: str, second_model_path: str, conf_thresh: float, iou_thresh: float, classes: list) -> None:
-        self.first_model = IdleObjectDetectionModel(
-            first_model_path, conf_thresh, iou_thresh, classes)
-        self.second_model = IdleObjectDetectionModel(
-            second_model_path, conf_thresh, iou_thresh, classes)
-        self.conf_thresh = conf_thresh
-        self.iou_thresh = iou_thresh
-        self.classes = classes
+    def __init__(self, models: list[IdleObjectDetectionModel]) -> None:
+        self.first_model = models[0]
+        self.second_model = models[1]
 
     @torch.no_grad()
     def __call_second_model__(self, img: np.array, coordinates: np.array) -> list:

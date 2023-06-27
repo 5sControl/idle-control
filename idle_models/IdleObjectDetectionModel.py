@@ -20,5 +20,4 @@ class IdleObjectDetectionModel:
             classes=self.classes,
             verbose=False
         )[0].boxes
-        print(results.conf)
         return results.xyxy, results.conf
