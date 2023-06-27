@@ -3,7 +3,8 @@
         67
     ],
     "iou_thres": 0.5,
-    "conf_thres": 0.3,
+    "conf_thres_1": 0.3,
+    "conf_thres_2": 0.5,
     "first_model_path": "idle_models/idle1_v0.3.11.pt",
     "second_model_path": "idle_models/idle2_v0.3.11.pt",
     "wait_time": 5,
