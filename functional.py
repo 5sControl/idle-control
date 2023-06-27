@@ -52,9 +52,7 @@ def init_model():
     model = IdleObjectDetectionModelPipeline(
         [
             IdleObjectDetectionModel(
-                FIRST_MODEL_PATH, CONF_THRES_1, IOU_THRES, CLASSES),
-            IdleObjectDetectionModel(
-                SECOND_MODEL_PATH, CONF_THRES_2, IOU_THRES, [0])
+                "idle_models/frozen_inference_graph.pb", "idle_models/ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt", CONF_THRES_1, IOU_THRES, CLASSES),
         ]
     )
     return model
@@ -69,7 +67,7 @@ def get_frame(h):
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         return img, time_
     except Exception as exc:
-        return None
+        return None, None
 
 
 def put_rectangle(img, boxes, scores):
