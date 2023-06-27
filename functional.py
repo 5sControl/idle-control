@@ -9,9 +9,7 @@ import cv2
 import requests
 import httplib2
 import numpy as np
-from idle_models.ObjectDetectionModel import ObjDetectionModel
 import time
-from dotenv import load_dotenv
 
 
 def create_logger():
@@ -34,9 +32,6 @@ def create_logger():
 
 def init_connection():
     password = os.environ.get("password")
-    if password is None:
-        load_dotenv("confs/settings.env")
-        password = os.environ.get("password")
     username = os.environ.get("username")
     try:
         h = httplib2.Http(".cache")
@@ -47,20 +42,16 @@ def init_connection():
     return None
 
 
-def init_model():
-    model = ObjDetectionModel(MODEL_PATH, CONF_THRES, IOU_THRES, CLASSES)
-    return model
-
-
 def get_frame(h):
     try:
+        time_ = datetime.datetime.now()
         _, content = h.request(os.environ.get(
             "camera_url"), "GET", body="foobar")
         nparr = np.frombuffer(content, np.uint8)
-        img0 = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        return img0
+        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        return img, time_
     except Exception as exc:
-        return None
+        return None, None
 
 
 def put_rectangle(img, boxes, scores):
@@ -78,7 +69,7 @@ def check_coordinates_diffs(coords_1: np.array, coords_2: np.array, threshold=TH
     return diff > threshold
 
 
-def send_report_and_save_photo(img0):
+def send_report_and_save_photo(img0, start_track_time):
     server_url = os.environ.get("server_url")
     folder = os.environ.get("folder")
 
@@ -86,17 +77,15 @@ def send_report_and_save_photo(img0):
     save_photo_url = f'{folder}/' + str(uuid.uuid4()) + '.jpg'
     cv2.imwrite(save_photo_url, img0)
 
-    time_delta_seconds = WAIT_TIME
-    start_tracking = str(datetime.datetime.now())
-    time.sleep(time_delta_seconds)
+    time.sleep(WAIT_TIME)
     stop_tracking = str(datetime.datetime.now())
 
     report_for_send = {
         'camera': folder.split('/')[1],
         'algorithm': 'idle_control',
-        'start_tracking': start_tracking,
+        'start_tracking': start_track_time,
         'stop_tracking': stop_tracking,
-        'photos': [{'image': save_photo_url, 'date': start_tracking}],
+        'photos': [{'image': save_photo_url, 'date': start_track_time}],
         'violation_found': True,
     }
     try:

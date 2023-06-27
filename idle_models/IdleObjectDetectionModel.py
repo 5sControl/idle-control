@@ -1,8 +1,8 @@
-from ultralytics import YOLO
 import torch
+from ultralytics import YOLO
 
 
-class ObjDetectionModel:
+class IdleObjectDetectionModel:
     def __init__(self, path: str, conf_thresh, iou_thresh, classes) -> None:
         self.model = YOLO(path)
         self.conf_thresh = conf_thresh
