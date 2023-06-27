@@ -25,7 +25,7 @@ def run():
             continue
         time.sleep(2)
         preds, scores = model(img)
-        img = put_rectangle(img, preds, scores)
+        img = put_rectangle(img, preds.numpy(), scores.numpy())
         if len(scores) > 0:
             logger.info("Telephone is detected")
             if check_coordinates_diffs(prev_preds, preds):

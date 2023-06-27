@@ -9,7 +9,6 @@ import cv2
 import requests
 import httplib2
 import numpy as np
-from idle_models.IdleObjectDetectionModelPipeline import IdleObjectDetectionModelPipeline
 from idle_models.IdleObjectDetectionModel import IdleObjectDetectionModel
 import time
 from dotenv import load_dotenv
@@ -49,20 +48,20 @@ def init_connection():
 
 
 def init_model():
-    model = IdleObjectDetectionModelPipeline(
-        [
-            IdleObjectDetectionModel(
-                "idle_models/frozen_inference_graph.pb", "idle_models/ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt", CONF_THRES_1, IOU_THRES, CLASSES),
-        ]
+    model = IdleObjectDetectionModel(
+        MODEL_PATH,
+        CONF_THRES,
+        IOU_THRES,
+        CLASSES
     )
     return model
 
 
 def get_frame(h):
     try:
+        time_ = datetime.datetime.now()
         _, content = h.request(os.environ.get(
             "camera_url"), "GET", body="foobar")
-        time_ = datetime.datetime.now()
         nparr = np.frombuffer(content, np.uint8)
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         return img, time_
