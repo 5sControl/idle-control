@@ -2,9 +2,6 @@
     "classes": [
         67
     ],
-    "iou_thres": 0.5,
-    "conf_thres": 0.3,
-    "model_path": "idle_models/idle_v0.3.11.pt",
     "wait_time": 10,
     "threshold": 100
 }

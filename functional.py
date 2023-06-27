@@ -9,9 +9,7 @@ import cv2
 import requests
 import httplib2
 import numpy as np
-from idle_models.IdleObjectDetectionModel import IdleObjectDetectionModel
 import time
-from dotenv import load_dotenv
 
 
 def create_logger():
@@ -34,9 +32,6 @@ def create_logger():
 
 def init_connection():
     password = os.environ.get("password")
-    if password is None:
-        load_dotenv("confs/settings.env")
-        password = os.environ.get("password")
     username = os.environ.get("username")
     try:
         h = httplib2.Http(".cache")
@@ -45,16 +40,6 @@ def init_connection():
     except Exception as exc:
         logging.error('init connection:\n' + str(exc))
     return None
-
-
-def init_model():
-    model = IdleObjectDetectionModel(
-        MODEL_PATH,
-        CONF_THRES,
-        IOU_THRES,
-        CLASSES
-    )
-    return model
 
 
 def get_frame(h):

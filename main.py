@@ -1,16 +1,20 @@
 import time
 from functional import *
+from send_request import predict
+from dotenv import load_dotenv
 
 
+password = os.environ.get("password")
+if password is None:
+    load_dotenv("confs/settings.env")
 logger = create_logger()
 
 
 def run():
+    server_url = os.environ.get("server_url")
     while (h := init_connection()) is None:
         logger.warning("Cannot create connection")
         time.sleep(1)
-    model = init_model()
-    logger.info("Model is initialized")
     prev_preds = None
     iter_idx = 0
     while True:
@@ -24,8 +28,8 @@ def run():
             time.sleep(1)
             continue
         time.sleep(2)
-        preds, scores = model(img)
-        img = put_rectangle(img, preds.numpy(), scores.numpy())
+        preds, scores = predict(img, server_url)
+        img = put_rectangle(img, preds, scores)
         if len(scores) > 0:
             logger.info("Telephone is detected")
             if check_coordinates_diffs(prev_preds, preds):
