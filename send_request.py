@@ -2,7 +2,7 @@ import requests
 import numpy as np
 
 
-PORT = 5000
+PORT = 5001
 
 
 def predict(img: np.array, server_url: str):

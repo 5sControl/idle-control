@@ -5,5 +5,5 @@
     "iou_thres": 0.5,
     "conf_thres": 0.3,
     "model_path": "idle_v0.3.11.pt",
-    "port": 5000
+    "port": 5001
 }
