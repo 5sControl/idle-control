@@ -27,8 +27,11 @@ def run():
             logger.warning("Empty photo")
             time.sleep(1)
             continue
-        time.sleep(2)
-        preds, scores = predict(img, server_url)
+        time.sleep(1)
+        preds, scores = predict(img, server_url, logger)
+        if preds is None:
+            time.sleep(1)
+            continue
         img = put_rectangle(img, preds, scores)
         if len(scores) > 0:
             logger.info("Telephone is detected")
