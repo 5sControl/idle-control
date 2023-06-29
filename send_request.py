@@ -18,8 +18,8 @@ def predict(img: np.array, server_url: str, logger: Logger):
         confidences = np.array(response.json().get("confidences"))
     else:
         logger.warning(
-            "Status code = {}\n JSON = {}".format(
-                response.status_code, response.json())
+            "Status code = {}\n response = {}".format(
+                response.status_code, response)
         )
         coordinates = confidences = None
     return [coordinates, confidences]
