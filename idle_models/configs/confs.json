@@ -4,6 +4,6 @@
     ],
     "iou_thres": 0.5,
     "conf_thres": 0.3,
-    "model_path": "idle_v0.3.11.pt",
+    "model_path": "yolor/yolor_csp_x.pt",
     "port": 5001
 }
