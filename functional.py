@@ -56,8 +56,8 @@ def get_frame(h):
 
 def put_rectangle(img, boxes, scores):
     for (x1, y1, x2, y2), score in zip(boxes.astype(int), scores):
-        cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 0), 2)
-        cv2.putText(img, str(score), (x1, y1),
+        cv2.rectangle(img, (x1, y1), (x2, y2), (255, 255, 255), 2)
+        cv2.putText(img, str(round(score, 3)), (x1, y1),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
     return img
 
