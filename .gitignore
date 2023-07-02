@@ -8,3 +8,4 @@ __pycache__
 .vscode/
 build/
 cmake-build-debug/
+cpp-dotenv/
