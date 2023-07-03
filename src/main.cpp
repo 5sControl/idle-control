@@ -5,23 +5,32 @@
 #include "functional.h"
 #include "send_request.h"
 #include "NumCpp.hpp"
+#include <fstream>
 
+
+inline bool is_file_exist (const std::string& name) {
+    return ( access( name.c_str(), F_OK ) != -1 );
+}
 
 int main() {
-    auto a = nc::random::randInt<int>({10, 10}, 0, 100);
-    std::cout << a;
-
+    if (!is_file_exist("confs/settings.env")) std::cout << "File is not found\n";
     auto& env = dotenv::env.load_dotenv("confs/settings.env");
     auto& server_url = env["server_url"];
-    auto& password = env["password"];
-    auto& name = env["name"];
-    while (true)
+    std::string password = env["password"];
+    std::string name = env["name"];
+    std::string camera_url = env["camera_url"];
+    for (
+            long status_code {init_connection(password, name, camera_url)};
+            status_code < 200 || status_code >= 300;
+            status_code = init_connection(password, name, camera_url)
+                    )
     {
-        std::cout << "Cannot create connection" << std::endl;
+        std::cout << "Cannot create connection. Status code - " << status_code << std::endl;
         usleep(1e6);
     }
     auto previous_coordinates = std::vector<std::vector<float>> {{}};
     int iter_idx = 0;
+    /*
     while (!init_connection(password, name))
     {
         cv::Mat img = get_frame();
@@ -46,6 +55,6 @@ int main() {
 
         std::time_t curr_time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
         break;
-    }
+    }*/
     return 0;
 }
