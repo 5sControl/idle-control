@@ -4,6 +4,7 @@
     ],
     "iou_thres": 0.5,
     "conf_thres": 0.46,
-    "model_path": "yolor/yolor_csp_x.pt",
+    "model_path": "yolor/yolor_csp_x_star.pt",
+    "conf_path": "yolor/yolor_csp_x.cfg",
     "port": 5001
 }
