@@ -10,8 +10,7 @@ model = IdleObjectDetectionModel(
     MODEL_PATH,
     CONF_THRES,
     IOU_THRES,
-    CLASSES,
-    CONF_PATH
+    CLASSES
 )
 
 

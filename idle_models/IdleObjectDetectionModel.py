@@ -6,13 +6,13 @@ from yolor.utils.general import non_max_suppression, scale_coords
 
 
 class IdleObjectDetectionModel:
-    def __init__(self, path: str, conf_thresh, iou_thresh, classes, conf_path) -> None:
-        self.model, self.device = get_model(path, conf_path)
+    def __init__(self, path: str, conf_thresh, iou_thresh, classes) -> None:
+        self.model, self.device = get_model(path, "yolor/yolor_csp_x.cfg")
         self.conf_thresh = conf_thresh
         self.iou_thresh = iou_thresh
         self.classes = classes
 
-    def __preprocess_image(self, img: np.array) -> np.array:
+    def __preprocess_image__(self, img: np.array) -> np.array:
         self.img_shape = img.shape
         img = letterbox(img.copy(), new_shape=1280, auto_size=64)[0]
         img = img[:, :, ::-1].transpose(2, 0, 1)
@@ -25,7 +25,7 @@ class IdleObjectDetectionModel:
 
     @torch.no_grad()
     def __call__(self, img: np.array) -> list:
-        img = self.__preprocess_image(img)
+        img = self.__preprocess_image__(img)
         pred = self.model(img, augment=False)[0]
         pred = non_max_suppression(
             pred, 0.45, 0.5, classes=[67], agnostic=False)[0]
