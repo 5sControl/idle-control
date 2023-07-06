@@ -7,11 +7,12 @@ find_package(cpr REQUIRED)
 
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
+execute_process(COMMAND "cp" "-r" "../src/confs" ".")
 
 set(CMAKE_CXX_STANDARD 17)
 add_subdirectory(cpp-dotenv)
-add_executable(idle_python src/main.cpp src/functional.cpp src/send_request.cpp)
-target_link_libraries(idle_python ${OpenCV_LIBS} )
-target_link_libraries(idle_python cpp_dotenv)
-target_link_libraries(idle_python NumCpp::NumCpp)
-target_link_libraries(idle_python cpr::cpr)
+add_executable(${PROJECT_NAME} src/main.cpp src/functional.cpp src/send_request.cpp)
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} )
+target_link_libraries(${PROJECT_NAME} cpp_dotenv)
+target_link_libraries(${PROJECT_NAME} NumCpp::NumCpp)
+target_link_libraries(${PROJECT_NAME} cpr::cpr)
