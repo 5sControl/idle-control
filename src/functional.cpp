@@ -5,23 +5,27 @@
 #include "NumCpp.hpp"
 #include <cmath>
 
-
-long init_connection(const std::string & password, const std::string & username, const std::string & url)
+cv::Mat get_frame(const std::string& url, const std::string& username, const std::string& password)
 {
     auto response = cpr::Get(
-                cpr::Url{url},
-                cpr::Body{"foobar"}
-                );
-    return response.status_code;
+            cpr::Url{url},
+            cpr::Authentication(password, username, cpr::AuthMode::BASIC),
+            cpr::Body("foobar")
+    );
+    if (response.status_code < 200 || response.status_code >= 300)
+    {
+        std::cout << "Cannot retrieve image. Status code = " << response.status_code << std::endl;
+        cv::Mat empty_mat;
+        return empty_mat;
+    }
+
+    nc::NdArray<uint8_t> np_array = nc::frombuffer<uint8_t>(response.text.c_str(), response.text.length());
+    cv::Mat image = cv::Mat(np_array.numRows(), np_array.numCols(), CV_8SC1, np_array.data());
+    image = cv::imdecode(image, cv::IMREAD_COLOR);
+    return image;
 }
 
-cv::Mat get_frame()
-{
-    cv::Mat img = cv::imread("snapshot.jpg", cv::IMREAD_COLOR);
-    return img;
-}
-
-cv::Mat put_rectangle(cv::Mat image, const nc::NdArray<int>& boxes, const nc::NdArray<double>& scores)
+cv::Mat put_rectangle(cv::Mat image, const nc::NdArray<float>& boxes, const nc::NdArray<float>& scores)
 {
     for (unsigned int idx {}; idx < nc::alen(scores); ++idx)
     {
@@ -46,7 +50,7 @@ cv::Mat put_rectangle(cv::Mat image, const nc::NdArray<int>& boxes, const nc::Nd
     return image;
 }
 
-bool check_coordinates_diffs(const nc::NdArray<double>& coordinates_1, const nc::NdArray<double>& coordinates_2, const double & threshold)
+bool check_coordinates_diffs(const nc::NdArray<float>& coordinates_1, const nc::NdArray<float>& coordinates_2, const double & threshold)
 {
     return nc::sum(nc::abs(coordinates_1 - coordinates_2))[0] > threshold;
 }

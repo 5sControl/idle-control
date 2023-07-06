@@ -1,8 +1,10 @@
 #include "cstring"
 #include "opencv2/opencv.hpp"
 #include "vector"
+#include "NumCpp.hpp"
 
-int init_connection(std::string password, std::string username);
-cv::Mat get_frame();
-bool check_coordinates_diffs(std::vector<std::vector<float>> prev_pred, std::vector<std::vector<float>> curr_pred);
-long init_connection(const std::string & password, const std::string & username, const std::string & url);
+
+cv::Mat get_frame(const std::string& url, const std::string& username, const std::string& password);
+bool check_coordinates_diffs(const nc::NdArray<float>& coordinates_1, const nc::NdArray<float>& coordinates_2, const float & threshold);
+cv::Mat put_rectangle(cv::Mat image, const nc::NdArray<float>& boxes, const nc::NdArray<float>& scores);
+void send_report_and_save_photo(cv::Mat img, const std::time_t & start_track_time);
