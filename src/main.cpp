@@ -19,42 +19,29 @@ int main() {
     std::string password = env["password"];
     std::string name = env["name"];
     std::string camera_url = env["camera_url"];
-    for (
-            long status_code {init_connection(password, name, camera_url)};
-            status_code < 200 || status_code >= 300;
-            status_code = init_connection(password, name, camera_url)
-                    )
-    {
-        std::cout << "Cannot create connection. Status code - " << status_code << std::endl;
-        usleep(1e6);
-    }
-    auto previous_coordinates = std::vector<std::vector<float>> {{}};
+    nc::NdArray<float> previous_coordinates;
     int iter_idx = 0;
-    /*
-    while (!init_connection(password, name))
+    while (true)
     {
-        cv::Mat img = get_frame();
-        if (!false)
+        cv::Mat img = get_frame(camera_url, name, password);
+        if (img.empty())
         {
             std::cout << "Empty photo" << std::endl;
-            usleep(1e6);
-            continue;
         }
-        std::vector<std::vector<float>> predictions = predict(img, server_url);
-
-
-        if (!predictions.empty())
+        nc::NdArray<float> predictions = predict(img, server_url);
+        if (predictions.isempty()) continue;
+        nc::NdArray<float> coordinates = predictions(predictions.rSlice(), 0);
+        nc::NdArray<float> probabilities = predictions(predictions.rSlice(), -1);
+        if (!coordinates.isempty())
         {
             std::cout << "Telephone is detected" << std::endl;
-            if (!check_coordinates_diffs(previous_coordinates, predictions))
+            if (check_coordinates_diffs(previous_coordinates, coordinates, 200))
             {
-
+                img = put_rectangle(img, coordinates, probabilities);
+                send_report_and_save_photo(img, start_tracking_time);
             }
-            previous_coordinates = predictions;
         }
-
-        std::time_t curr_time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-        break;
-    }*/
+        previous_coordinates = coordinates;
+    }
     return 0;
 }
