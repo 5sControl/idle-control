@@ -28,14 +28,15 @@ def run():
             time.sleep(1)
             continue
         time.sleep(1)
-        preds, scores = predict(img, server_url, logger)
+        preds = predict(img, server_url, logger)
         if preds is None:
+            logger.warning("Empty response")
             time.sleep(1)
             continue
-        img = put_rectangle(img, preds, scores)
-        if len(scores) > 0:
+        if len(preds) > 0:
             logger.info("Telephone is detected")
             if check_coordinates_diffs(prev_preds, preds):
+                img = put_rectangle(img, preds[:, :4], preds[:, 4])
                 send_report_and_save_photo(img, start_tracking)
             prev_preds = preds
 

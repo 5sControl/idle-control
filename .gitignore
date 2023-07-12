@@ -1,8 +1,9 @@
 .cache
 .idea/
 images/
-models/
 env/
 __pycache__
 .env
 .vscode/
+build/
+cmake-build-debug/

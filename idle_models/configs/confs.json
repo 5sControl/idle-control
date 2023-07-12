@@ -3,7 +3,7 @@
         67
     ],
     "iou_thres": 0.5,
-    "conf_thres": 0.3,
-    "model_path": "yolor/yolor_csp_x.pt",
+    "conf_thres": 0.5,
+    "model_path": "yolor/yolor_csp_x_star.pt",
     "port": 5001
 }

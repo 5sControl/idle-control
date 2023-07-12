@@ -24,11 +24,11 @@ class IdleObjectDetectionModel:
         return img
 
     @torch.no_grad()
-    def __call__(self, img: np.array) -> list:
+    def __call__(self, img: np.array) -> torch.Tensor:
         img = self.__preprocess_image__(img)
         pred = self.model(img, augment=False)[0]
         pred = non_max_suppression(
             pred, 0.45, 0.5, classes=[67], agnostic=False)[0]
         pred[:, :4] = scale_coords(
             img.shape[2:], pred[:, :4], self.img_shape).round()
-        return pred[:, :4], pred[:, 4]
+        return pred[:, :5]
