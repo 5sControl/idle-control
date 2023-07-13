@@ -1,34 +1,26 @@
 import torch
-from yolor.model import get_model
 import numpy as np
-from yolor.utils.datasets import letterbox
-from yolor.utils.general import non_max_suppression, scale_coords
+from transformers import DetrImageProcessor, DetrForObjectDetection, DetrConfig
+import torch
 
 
 class IdleObjectDetectionModel:
     def __init__(self, path: str, conf_thresh, iou_thresh, classes) -> None:
-        self.model, self.device = get_model(path, "yolor/yolor_csp_x.cfg")
+        self.model = DetrForObjectDetection.from_pretrained(path)
+        self.model.eval()
+        self.processor = DetrImageProcessor.from_pretrained(path)
         self.conf_thresh = conf_thresh
         self.iou_thresh = iou_thresh
         self.classes = classes
 
-    def __preprocess_image__(self, img: np.array) -> np.array:
-        self.img_shape = img.shape
-        img = letterbox(img.copy(), new_shape=1280, auto_size=64)[0]
-        img = img[:, :, ::-1].transpose(2, 0, 1)
-        img = np.ascontiguousarray(img)
-        img = torch.from_numpy(img).to(self.device)
-        img = img.float()
-        img /= 255.0
-        img = img.unsqueeze(0)
-        return img
-
     @torch.no_grad()
-    def __call__(self, img: np.array) -> torch.Tensor:
-        img = self.__preprocess_image__(img)
-        pred = self.model(img, augment=False)[0]
-        pred = non_max_suppression(
-            pred, 0.45, 0.5, classes=[67], agnostic=False)[0]
-        pred[:, :4] = scale_coords(
-            img.shape[2:], pred[:, :4], self.img_shape).round()
-        return pred[:, :5]
+    def __call__(self, img: np.array) -> np.array:
+        inputs = self.processor(images=img, return_tensors="pt")
+        outputs = self.model(**inputs)
+        target_sizes = torch.tensor([img.shape[:-1]])
+        results = self.processor.post_process_object_detection(outputs, target_sizes=target_sizes, threshold=self.conf_thresh)[0]
+        pred = []
+        for score, label, box in zip(results["scores"], results["labels"], results["boxes"]):
+            if self.model.config.id2label[label.item()] == 'cell phone':
+                pred.append([round(i, 2) for i in box.tolist()] + [score.item()])
+        return np.array(pred)
