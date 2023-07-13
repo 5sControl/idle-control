@@ -9,4 +9,4 @@ WORKDIR /var/www/5scontrol
 COPY . .
 RUN mkdir -p /usr/src/app
 EXPOSE 5001
-CMD [ "flask", "run","--host","0.0.0.0","--port","5001"]
+CMD [ "flask", "run","--host","0.0.0.0","--port", "5001"]
