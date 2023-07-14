@@ -3,6 +3,7 @@ from functional import *
 from send_request import predict
 from dotenv import load_dotenv
 from IdleReporter import IdleReporter
+from logger import create_logger
 
 
 password = os.environ.get("password")
