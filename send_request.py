@@ -27,4 +27,4 @@ def predict(img: np.array, server_url: str, logger: Logger) -> list:
         response.raise_for_status()
         return np.array(response.json().get("coordinates"))
     except Exception as exc:
-        logger.critical("Cannot send request. Error - {}".format(exc))
+        logger.critical("Cannot send request to model server. Error - {}".format(exc))

@@ -10,10 +10,11 @@ import numpy as np
 
 
 class IdleReporter:
-    def __init__(self, images_folder: str, server_url: str) -> None:
+    def __init__(self, images_folder: str, server_url: str, logger: logging.Logger) -> None:
         self.images_folder = images_folder
         self.server_url = server_url
-        os.mkdir(self.images_folder) if not os.path.exists(self.images_folder) else ...
+        self.logger = logger
+        os.makedirs(self.images_folder, exist_ok=True)
 
     def _save_image(self, image: np.array) -> str:
         save_photo_url = f'{self.images_folder}/' + str(uuid.uuid4()) + '.jpg'
@@ -36,6 +37,7 @@ class IdleReporter:
 
     def send_report(self, report: dict):
         try:
+            self.logger.info(str(report))
             requests.post(
                 url=f'{self.server_url}:80/api/reports/report-with-photos/', json=report
             )
