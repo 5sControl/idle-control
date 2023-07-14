@@ -45,8 +45,11 @@ def init_connection():
 def get_frame(h):
     try:
         time_ = datetime.datetime.now()
-        _, content = h.request(os.environ.get(
-            "camera_url"), "GET", body="foobar")
+        _, content = h.request(
+            os.environ.get("camera_url"), 
+            "GET", 
+            body="foobar"
+        )
         nparr = np.frombuffer(content, np.uint8)
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         return img, time_
@@ -67,29 +70,3 @@ def check_coordinates_diffs(coords_1: np.array, coords_2: np.array, threshold=TH
         return True
     diff = np.abs(coords_1 - coords_2).sum()
     return diff > threshold
-
-
-def send_report_and_save_photo(img0, start_track_time):
-    server_url = os.environ.get("server_url")
-    folder = os.environ.get("folder")
-
-    pathlib.Path(folder).mkdir(exist_ok=True, parents=True)
-    save_photo_url = f'{folder}/' + str(uuid.uuid4()) + '.jpg'
-    cv2.imwrite(save_photo_url, img0)
-
-    time.sleep(WAIT_TIME)
-    stop_tracking = str(datetime.datetime.now())
-
-    report_for_send = {
-        'camera': folder.split('/')[1],
-        'algorithm': 'idle_control',
-        'start_tracking': start_track_time,
-        'stop_tracking': stop_tracking,
-        'photos': [{'image': save_photo_url, 'date': start_track_time}],
-        'violation_found': True,
-    }
-    try:
-        requests.post(
-            url=f'{server_url}:80/api/reports/report-with-photos/', json=report_for_send)
-    except Exception as exc:
-        logging.error('send report:\n' + str(exc))
