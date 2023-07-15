@@ -1,9 +1,9 @@
 import time
 import utils
 import connection
+from confs import configs
 from dotenv import load_dotenv
 import os
-from confs.load_configs import THRESHOLD, WAIT_TIME
 
 
 password = os.environ.get("password")
@@ -17,9 +17,8 @@ folder = os.environ.get("folder")
 
 logger = utils.create_logger()
 
-
 prev_preds = None
-reporter = connection.IdleReporter(folder, server_url, WAIT_TIME, logger)
+reporter = connection.IdleReporter(folder, server_url, configs["wait_time"], logger)
 image_extractor = connection.ImageHTTPExtractor(camera_url, logger, username=username, password=password)
 
 iter_idx = 0
@@ -38,7 +37,7 @@ while True:
         continue
     if len(preds) > 0:
         logger.info("Telephone is detected")
-        if utils.are_bboxes_equal(prev_preds, preds, THRESHOLD):
+        if utils.are_bboxes_equal(prev_preds, preds, configs["threshold"]):
             img = utils.put_rectangle(img, preds[:, :4], preds[:, 4])
             reporter.send_report(reporter.create_report(img, str(start_tracking)))
         prev_preds = preds

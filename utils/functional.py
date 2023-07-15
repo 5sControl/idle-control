@@ -1,4 +1,3 @@
-from confs.load_configs import *
 import cv2
 import numpy as np
 
@@ -11,7 +10,7 @@ def put_rectangle(img: cv2.Mat, boxes: list, scores: list) -> np.array:
     return img
 
 
-def are_bboxes_equal(coords_1: np.array, coords_2: np.array, threshold=THRESHOLD) -> bool:
+def are_bboxes_equal(coords_1: np.array, coords_2: np.array, threshold) -> bool:
     if coords_1 is None or coords_1.shape != coords_2.shape:
         return True
     diff = np.abs(coords_1 - coords_2).sum()
