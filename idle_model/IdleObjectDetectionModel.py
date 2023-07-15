@@ -1,6 +1,6 @@
 import torch
 import numpy as np
-from transformers import DetrImageProcessor, DetrForObjectDetection, DetrConfig
+from transformers import DetrImageProcessor, DetrForObjectDetection
 import torch
 
 

@@ -1,6 +1,5 @@
 import os
 import time
-from confs.load_configs import WAIT_TIME
 import logging
 import requests
 import datetime
@@ -10,9 +9,10 @@ import numpy as np
 
 
 class IdleReporter:
-    def __init__(self, images_folder: str, server_url: str, logger: logging.Logger) -> None:
+    def __init__(self, images_folder: str, server_url: str, wait_time: int, logger: logging.Logger) -> None:
         self.images_folder = images_folder
         self.server_url = server_url
+        self.wait_time = wait_time
         self.logger = logger
         os.makedirs(self.images_folder, exist_ok=True)
 
@@ -22,7 +22,7 @@ class IdleReporter:
         return save_photo_url
 
     def create_report(self, image: np.array, start_tracking_time: datetime.time) -> dict:
-        time.sleep(WAIT_TIME)
+        time.sleep(self.wait_time)
         stop_tracking_time = str(datetime.datetime.now())
         saved_image_name = self._save_image(image)
         report_for_send = {
@@ -35,7 +35,7 @@ class IdleReporter:
         }
         return report_for_send
 
-    def send_report(self, report: dict):
+    def send_report(self, report: dict) -> None:
         try:
             self.logger.info(str(report))
             requests.post(
