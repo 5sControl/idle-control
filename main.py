@@ -4,6 +4,7 @@ import connection
 from confs import configs
 from dotenv import load_dotenv
 import os
+import numpy as np
 
 
 password = os.environ.get("password")
@@ -20,6 +21,7 @@ logger = utils.create_logger()
 prev_preds = None
 reporter = connection.IdleReporter(folder, server_url, configs["wait_time"], logger)
 image_extractor = connection.ImageHTTPExtractor(camera_url, logger, username=username, password=password)
+model_predictor = connection.ModelPredictionsReceiver(server_url, logger)
 
 iter_idx = 0
 
@@ -31,11 +33,11 @@ while True:
     if img is None:
         time.sleep(1)
         continue
-    preds = utils.predict(img, server_url, logger)
+    preds = model_predictor.predict(img)
     if preds is None:
         time.sleep(1)
         continue
-    if len(preds) > 0:
+    if preds.size != 0:
         logger.info("Telephone is detected")
         if utils.are_bboxes_equal(prev_preds, preds, configs["threshold"]):
             img = utils.put_rectangle(img, preds[:, :4], preds[:, 4])
