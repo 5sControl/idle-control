@@ -43,3 +43,4 @@ while True:
             img = utils.put_rectangle(img, preds[:, :4], preds[:, 4])
             reporter.send_report(reporter.create_report(img, str(start_tracking)))
         prev_preds = preds
+    time.sleep(2)

@@ -41,13 +41,10 @@ class ModelPredictionsReceiver:
             img[img.shape[0] // 2:, :, :]
         ]
         preds = [self._predict(imgs[0]), self._predict(imgs[1])]
-        print(preds)
         if len(preds[1]):
             preds[1][:, 1] += img.shape[0] // 2
             preds[1][:, 3] += img.shape[0] // 2
         result = np.append(*preds)
         if len(result.shape) == 1:
             result = np.expand_dims(result, 0)
-        print(result.shape)
-        print(result)
         return result
