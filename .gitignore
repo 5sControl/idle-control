@@ -7,4 +7,4 @@ __pycache__
 .vscode/
 build/
 cmake-build-debug/
-idle_models/weights/
+idle_model/weights/

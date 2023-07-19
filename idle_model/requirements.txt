@@ -9,5 +9,4 @@ PyYAML==6.0
 requests==2.27.1
 Flask==2.2.2
 colorlog==4.8.0
-transformers==4.28.1
-timm==0.6.13
+ultralytics==8.0.136

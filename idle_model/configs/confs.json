@@ -3,7 +3,7 @@
         67
     ],
     "iou_thres": 0.5,
-    "conf_thres": 0.65,
-    "model_path": "./weights",
+    "conf_thres": 0.8,
+    "model_path": "weights/yolov8l.pt",
     "port": 5001
 }
