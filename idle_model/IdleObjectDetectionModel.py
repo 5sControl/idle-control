@@ -1,6 +1,5 @@
 import torch
 import numpy as np
-from transformers import DetrImageProcessor, DetrForObjectDetection
 import torch
 from ultralytics import YOLO
 
