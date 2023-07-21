@@ -11,6 +11,7 @@ import logging
 app = Flask(__name__)
 model = IdleObjectDetectionModel(
     MODEL_PATH,
+    CONF_PATH,
     CONF_THRES,
     IOU_THRES,
     CLASSES
