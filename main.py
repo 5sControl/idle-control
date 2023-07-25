@@ -37,7 +37,7 @@ while True:
     if preds is None:
         time.sleep(1)
         continue
-    if preds.size != 0:
+    if preds.size != 0 and np.any(preds[:, -1] == 1.):
         logger.info("Telephone is detected")
         if utils.are_bboxes_equal(prev_preds, preds, configs["threshold"]):
             img = utils.put_rectangle(img, preds[:, :4], preds[:, 4])

@@ -8,3 +8,4 @@ __pycache__
 build/
 cmake-build-debug/
 idle_model/weights/
+*.pyc
