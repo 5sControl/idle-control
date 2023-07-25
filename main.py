@@ -34,7 +34,7 @@ while True:
         time.sleep(1)
         continue
     preds = model_predictor.predict(img)
-    if preds is None:
+    if preds is None or np.any(preds[:, -1] == 1.):
         time.sleep(1)
         continue
     if preds.size != 0:
