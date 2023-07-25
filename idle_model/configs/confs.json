@@ -3,7 +3,8 @@
         67
     ],
     "iou_thres": 0.5,
-    "conf_thres": 0.8,
-    "model_path": "weights/yolov8l.pt",
+    "conf_thres": 0.5,
+    "model_path": "weights/idle_v0.4.4.pt",
+    "conf_path": "weights/yolor_csp_x.cfg",
     "port": 5001
 }
