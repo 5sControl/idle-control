@@ -18,7 +18,7 @@ folder = os.environ.get("folder")
 
 logger = utils.create_logger()
 
-prev_preds = None
+prev_preds = np.array([[]]).astype(np.float32)
 reporter = connection.IdleReporter(folder, server_url, configs["wait_time"], logger)
 image_extractor = connection.ImageHTTPExtractor(camera_url, logger, username=username, password=password)
 model_predictor = connection.ModelPredictionsReceiver(server_url, logger)
