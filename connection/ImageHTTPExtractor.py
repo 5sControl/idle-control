@@ -15,15 +15,15 @@ class ImageHTTPExtractor:
 
     def get_snapshot(self) -> Tuple[Union[cv2.Mat, None], Union[datetime.time, None]]:
         try:
-                curr_time = datetime.datetime.now()
-                response, content = self.http_connection.request(
-                    self.server_url,
-                    "GET", 
-                    body="foobar"
-                )
-                nparr = np.frombuffer(content, np.uint8)
-                img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-                return img, curr_time
+            curr_time = datetime.datetime.now()
+            response, content = self.http_connection.request(
+                self.server_url,
+                "GET", 
+                body="foobar"
+            )
+            nparr = np.frombuffer(content, np.uint8)
+            img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            return img, curr_time
         except Exception as exc:
-                self.logger.error(f"Cannot retrieve image. Following error raised - {exc}")
-                return None, None
+            self.logger.error(f"Cannot retrieve image. Following error raised - {exc}")
+            return None, None

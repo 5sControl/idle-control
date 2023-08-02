@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import numba
 
 
 def put_rectangle(img: cv2.Mat, boxes: list, scores: list) -> np.array:
@@ -10,8 +11,8 @@ def put_rectangle(img: cv2.Mat, boxes: list, scores: list) -> np.array:
     return img
 
 
-def are_bboxes_equal(coords_1: np.array, coords_2: np.array, threshold) -> bool:
+@numba.njit(numba.boolean(numba.float32[:, :], numba.float32[:, :], numba.float32), parallel=True)
+def are_bboxes_equal(coords_1: np.array, coords_2: np.array, threshold: float) -> bool:
     if coords_1 is None or coords_1.shape != coords_2.shape:
         return True
-    diff = np.abs(coords_1 - coords_2).sum()
-    return diff > threshold
+    return np.abs(coords_1 - coords_2).sum() > threshold
