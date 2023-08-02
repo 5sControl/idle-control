@@ -30,7 +30,7 @@ class ModelPredictionsReceiver:
                 }
             )
             response.raise_for_status()
-            return np.array(response.json().get("coordinates"))
+            return np.array(response.json().get("coordinates")).astype(np.float32)
         except Exception as exc:
             self.logger.critical("Cannot send request to model server. Error - {}".format(exc))
-            return np.array([])
+            return np.array([[]])
