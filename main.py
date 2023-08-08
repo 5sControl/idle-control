@@ -39,9 +39,11 @@ while True:
         continue
     if preds.size != 0 and not np.any(preds == 1.):
         logger.info("Telephone is detected")
-        if utils.are_bboxes_equal(prev_preds, preds, configs["threshold"]):
+        if utils.bboxes_not_equal(prev_preds, preds, configs["threshold"]):
             utils.save_cropped_bbox(img, preds[:, :4])
             img = utils.put_rectangle(img, preds[:, :4], preds[:, 4])
             reporter.send_report(reporter.create_report(img, str(start_tracking)))
+        else:
+            logger.debug("Equal bboxes")
         prev_preds = preds
     time.sleep(2)
