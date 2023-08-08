@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 import numba
+import os
+import uuid
 
 
 def put_rectangle(img: cv2.Mat, boxes: list, scores: list) -> np.array:
@@ -12,7 +14,14 @@ def put_rectangle(img: cv2.Mat, boxes: list, scores: list) -> np.array:
 
 
 @numba.njit(numba.boolean(numba.float32[:, :], numba.float32[:, :], numba.float32), parallel=True)
-def are_bboxes_equal(coords_1: np.array, coords_2: np.array, threshold: float) -> bool:
+def bboxes_not_equal(coords_1: np.array, coords_2: np.array, threshold: float) -> bool:
     if coords_1 is None or coords_1.shape != coords_2.shape:
         return True
     return np.abs(coords_1 - coords_2).sum() > threshold
+
+def save_cropped_bbox(img: np.array, bboxes: np.array):
+    os.makedirs("images/debug/", exist_ok=True)
+    for bbox in bboxes:
+        x1, y1, x2, y2 = bbox.astype(int)
+        c = 15
+        cv2.imwrite(f"images/debug/{uuid.uuid4()}.png", img[x1 - c:x2 + c, y1 - c:y2 + c])
