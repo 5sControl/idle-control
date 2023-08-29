@@ -1,10 +1,11 @@
-import time
 import utils
 import connection
 from confs import configs
 from dotenv import load_dotenv
+from IdleAlgorithm import IdleAlgorithm
 import os
 import numpy as np
+import asyncio
 
 
 password = os.environ.get("password")
@@ -13,37 +14,24 @@ if password is None:
 password = os.environ.get("password")
 username = os.environ.get("username")
 server_url = os.environ.get("server_url")
-camera_url = os.environ.get("camera_url")
+camera_ip = os.environ.get("camera_ip")
 folder = os.environ.get("folder")
 
 logger = utils.create_logger()
 
 prev_preds = np.array([[]]).astype(np.float32)
 reporter = connection.IdleReporter(folder, server_url, configs["wait_time"], logger)
-image_extractor = connection.ImageHTTPExtractor(camera_url, logger, username=username, password=password)
+image_extractor = connection.ImageHTTPExtractor(camera_ip, logger, username=username, password=password)
 model_predictor = connection.ModelPredictionsReceiver(server_url, logger)
+algo = IdleAlgorithm(logger, image_extractor, model_predictor, reporter)
 
-iter_idx = 0
+async def main():
+    await asyncio.gather(connection.run_sio(server_url + ':3456'), algo.run())
 
-while True:
-    iter_idx += 1
-    if iter_idx % 60 == 0:
-        logger.info("60 iterations passed")
-    img, start_tracking = image_extractor.get_snapshot()
-    if img is None:
-        time.sleep(1)
-        continue
-    preds = model_predictor.predict(img)
-    if preds is None:
-        time.sleep(1)
-        continue
-    if preds.size != 0 and not np.any(preds == 1.):
-        logger.info("Telephone is detected")
-        if utils.bboxes_not_equal(prev_preds, preds, configs["threshold"]):
-            utils.save_cropped_bbox(img, preds[:, :4])
-            img = utils.put_rectangle(img, preds[:, :4], preds[:, 4])
-            reporter.send_report(reporter.create_report(img, str(start_tracking)))
-        else:
-            logger.debug("Equal bboxes")
-        prev_preds = preds
-    time.sleep(2)
+loop = asyncio.get_event_loop()
+try:
+    loop.run_until_complete(main())
+except Exception as exc:
+    print(exc)
+finally:
+    loop.close()

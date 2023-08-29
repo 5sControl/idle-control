@@ -6,7 +6,7 @@ from yolor.utils.general import non_max_suppression, scale_coords
 
 
 class IdleObjectDetectionModel:
-    def __init__(self, model_path: str, config_path: str, conf_thresh, iou_thresh, classes) -> None:
+    def __init__(self, model_path: str, config_path: str, conf_thresh: float, iou_thresh: float, classes: list) -> None:
         self.model, self.device = get_model(model_path, config_path)
         self.conf_thresh = conf_thresh
         self.iou_thresh = iou_thresh
@@ -27,8 +27,6 @@ class IdleObjectDetectionModel:
     def __call__(self, img: np.array) -> list:
         img = self.__preprocess_image__(img)
         pred = self.model(img, augment=False)[0]
-        pred = non_max_suppression(
-            pred, 0.45, 0.5, classes=[67], agnostic=False)[0]
-        pred[:, :4] = scale_coords(
-            img.shape[2:], pred[:, :4], self.img_shape).round()
+        pred = non_max_suppression(pred, self.conf_thresh, self.iou_thresh, classes=[67], agnostic=False)[0]
+        pred[:, :4] = scale_coords(img.shape[2:], pred[:, :4], self.img_shape).round()
         return pred[:, :5]
