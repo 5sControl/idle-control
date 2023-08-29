@@ -21,7 +21,10 @@ def bboxes_not_equal(coords_1: np.array, coords_2: np.array, threshold: float) -
 
 def save_cropped_bbox(img: np.array, bboxes: np.array):
     os.makedirs("images/debug/", exist_ok=True)
-    for bbox in bboxes:
-        x1, y1, x2, y2 = bbox.astype(int)
-        c = 15
-        cv2.imwrite(f"images/debug/{uuid.uuid4()}.png", img[x1 - c:x2 + c, y1 - c:y2 + c])
+    try:
+        for bbox in bboxes:
+            x1, y1, x2, y2 = bbox.astype(int)
+            c = 15
+            cv2.imwrite(f"images/debug/{uuid.uuid4()}.png", img[x1 - c:x2 + c, y1 - c:y2 + c])
+    except Exception:
+        pass
