@@ -1,5 +1,5 @@
 import utils
-import connection
+from connection import run_sio, IdleReporter, ImageHTTPExtractor, ModelPredictionsReceiver
 from confs import configs
 from dotenv import load_dotenv
 from IdleAlgorithm import IdleAlgorithm
@@ -20,13 +20,13 @@ folder = os.environ.get("folder")
 logger = utils.create_logger()
 
 prev_preds = np.array([[]]).astype(np.float32)
-reporter = connection.IdleReporter(folder, server_url, configs["wait_time"], logger)
-image_extractor = connection.ImageHTTPExtractor(camera_ip, logger, username=username, password=password)
-model_predictor = connection.ModelPredictionsReceiver(server_url, logger)
+reporter = IdleReporter(folder, server_url, configs["wait_time"], logger)
+image_extractor = ImageHTTPExtractor(camera_ip, logger, username=username, password=password)
+model_predictor = ModelPredictionsReceiver(server_url, logger)
 algo = IdleAlgorithm(logger, image_extractor, model_predictor, reporter)
 
 async def main():
-    await asyncio.gather(connection.run_sio(server_url + ':3456'), algo.run())
+    await asyncio.gather(run_sio(server_url + ':3456'), algo.start())
 
 loop = asyncio.get_event_loop()
 try:
