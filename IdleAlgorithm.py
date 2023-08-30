@@ -4,6 +4,7 @@ from connection import ImageHTTPExtractor, ModelPredictionsReceiver, IdleReporte
 from confs import configs
 import utils
 import numpy as np
+import time
 
 
 class IdleAlgorithm:
@@ -18,21 +19,24 @@ class IdleAlgorithm:
         self._image_extractor = image_extractor
         self._model_predictor = model_predictor
         self._reporter = reporter
+        self._min_epoch_time = 2 # replace on config in future
 
-    async def run(self):
-        iter_idx = 0
+    async def start(self) -> None:
         while True:
-            iter_idx += 1
-            if iter_idx % 60 == 0:
-                self._logger.info("60 iterations passed")
+            start_epoch_time = time.time()
+            self._run_one_idle_epoch()
+            end_epoch_time = time.time()
+            passed_time = end_epoch_time - start_epoch_time
+            if passed_time < self._min_epoch_time:
+                await asyncio.sleep(self._min_epoch_time - passed_time)
+
+    def _run_one_idle_epoch(self) -> None:
             img, start_tracking = self._image_extractor.get_snapshot()
             if img is None:
-                asyncio.sleep(1)
-                continue
+                return
             preds = self._model_predictor.predict(img)
             if preds is None:
-                asyncio.sleep(1)
-                continue
+                return
             if preds.size != 0 and not np.any(preds == 1.):
                 self._logger.info("Telephone is detected")
                 if utils.bboxes_not_equal(prev_preds, preds, configs["threshold"]):
@@ -42,4 +46,3 @@ class IdleAlgorithm:
                 else:
                     self._logger.debug("Equal bboxes")
                 prev_preds = preds
-            asyncio.sleep(2)

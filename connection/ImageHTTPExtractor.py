@@ -27,7 +27,8 @@ class ImageHTTPExtractor:
             img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
             return img, curr_time
         except Exception as exc:
-            self.logger.error(f"Cannot retrieve image. Following error raised - {exc}")
+            self.logger.warning(f"Cannot retrieve image. Following error raised - {exc}")
+            print(images.keys())
             return None, None
 
 @sio.event
@@ -36,9 +37,9 @@ async def connect():
 
 @sio.event
 async def snapshot_updated(data):
-    camera_url, screen = data.get("camera_ip"), data.get("screenshot")
+    camera_ip, screen = data.get("camera_ip"), data.get("screenshot")
     global images
-    images[camera_url] = screen
+    images[camera_ip] = screen
 
 async def run_sio(url):
     await sio.connect(url)
