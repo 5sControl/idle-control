@@ -22,6 +22,7 @@ class IdleAlgorithm:
         self._min_epoch_time = 2 # replace on config in future
 
     async def start(self) -> None:
+        self.prev_preds = None
         while True:
             start_epoch_time = time.time()
             self._run_one_idle_epoch()
@@ -39,10 +40,10 @@ class IdleAlgorithm:
                 return
             if preds.size != 0 and not np.any(preds == 1.):
                 self._logger.info("Telephone is detected")
-                if utils.bboxes_not_equal(prev_preds, preds, configs["threshold"]):
+                if utils.bboxes_not_equal(self.prev_preds, preds, configs["threshold"]):
                     utils.save_cropped_bbox(img, preds[:, :4])
                     img = utils.put_rectangle(img, preds[:, :4], preds[:, 4])
                     self._reporter.send_report(self._reporter.create_report(img, str(start_tracking)))
                 else:
                     self._logger.debug("Equal bboxes")
-                prev_preds = preds
+                self.prev_preds = preds
