@@ -22,7 +22,7 @@ class IdleAlgorithm:
         self._min_epoch_time = 2 # replace on config in future
 
     async def start(self) -> None:
-        self.prev_preds = None
+        self.prev_preds = np.array([[]]).astype(np.float32)
         while True:
             start_epoch_time = time.time()
             self._run_one_idle_epoch()
