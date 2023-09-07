@@ -1,3 +1,3 @@
 from .IdleReporter import IdleReporter
-from .ImageHTTPExtractor import ImageHTTPExtractor, run_sio
+from .ImageHTTPExtractor import ImageHTTPExtractor
 from .ModelPredictionsReceiver import ModelPredictionsReceiver
