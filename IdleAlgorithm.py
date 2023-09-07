@@ -21,7 +21,7 @@ class IdleAlgorithm:
         self._reporter = reporter
         self._min_epoch_time = 2 # replace on config in future
 
-    async def start(self) -> None:
+    def start(self) -> None:
         self.prev_preds = np.array([[]]).astype(np.float32)
         while True:
             start_epoch_time = time.time()
@@ -29,13 +29,15 @@ class IdleAlgorithm:
             end_epoch_time = time.time()
             passed_time = end_epoch_time - start_epoch_time
             if passed_time < self._min_epoch_time:
-                await asyncio.sleep(self._min_epoch_time - passed_time)
+                time.sleep(self._min_epoch_time - passed_time)
 
     def _run_one_idle_epoch(self) -> None:
             img, start_tracking = self._image_extractor.get_snapshot()
             if img is None:
                 return
+            self._logger.debug("Sending request for model predictions")
             preds = self._model_predictor.predict(img)
+            self._logger.debug("Model predictiions was recieved")
             if preds is None:
                 return
             if preds.size != 0 and not np.any(preds == 1.):

@@ -8,15 +8,6 @@ import colorlog
 import logging
 
 
-app = Flask(__name__)
-model = IdleObjectDetectionModel(
-    MODEL_PATH,
-    CONF_PATH,
-    CONF_THRES,
-    IOU_THRES,
-    CLASSES
-)
-
 logger = logging.getLogger('min_max_logger')
 handler = colorlog.StreamHandler()
 handler.setFormatter(colorlog.ColoredFormatter(
@@ -31,6 +22,16 @@ handler.setFormatter(colorlog.ColoredFormatter(
 logger.addHandler(handler)
 logger.setLevel(logging.DEBUG)
 logger.propagate = False
+
+app = Flask(__name__)
+model = IdleObjectDetectionModel(
+    MODEL_PATH,
+    CONF_PATH,
+    CONF_THRES,
+    IOU_THRES,
+    CLASSES,
+    logger
+)
 
 convert_bytes2image = lambda bytes: np.array(Image.open(io.BytesIO(bytes)), dtype=np.uint8)
 
