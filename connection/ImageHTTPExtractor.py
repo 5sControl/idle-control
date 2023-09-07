@@ -4,6 +4,7 @@ import datetime
 import numpy as np
 import cv2
 from typing import Tuple, Union
+import requests
 
 
 class ImageHTTPExtractor:
@@ -15,13 +16,9 @@ class ImageHTTPExtractor:
 
     def get_snapshot(self) -> Tuple[Union[cv2.Mat, None], Union[datetime.time, None]]:
         try:
-            response, content = self.http_connection.request(
-                self.camera_ip,
-                "GET", 
-                body="foobar"
-            )        
+            response = requests.get(self.camera_ip)  
             curr_time = datetime.datetime.now()
-            nparr = np.frombuffer(content, np.uint8)
+            nparr = np.frombuffer(response.content, np.uint8)
             img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
             return img, curr_time
         except Exception as exc:
