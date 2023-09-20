@@ -2,9 +2,9 @@
     "classes": [
         67
     ],
-    "iou_thres": 0.5,
-    "conf_thres": 0.6,
+    "iou_thresh": 0.5,
+    "conf_thresh": 0.7,
     "model_path": "weights/idle_v0.4.4.pt",
-    "conf_path": "weights/yolor_csp_x.cfg",
+    "config_path": "weights/yolor_csp_x.cfg",
     "port": 5001
 }
