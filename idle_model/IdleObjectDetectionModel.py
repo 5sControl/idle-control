@@ -4,10 +4,11 @@ import numpy as np
 from yolor.utils.datasets import letterbox
 from yolor.utils.general import non_max_suppression, scale_coords
 import time
+from logging import Logger
 
 
 class IdleObjectDetectionModel:
-    def __init__(self, model_path: str, config_path: str, conf_thresh: float, iou_thresh: float, classes: list, logger) -> None:
+    def __init__(self, model_path: str, config_path: str, conf_thresh: float, iou_thresh: float, classes: list, logger: Logger, **kwargs) -> None:
         self.model, self.device = get_model(model_path, config_path)
         self.conf_thresh = conf_thresh
         self.iou_thresh = iou_thresh
