@@ -27,7 +27,7 @@ class IdleReporter:
         saved_image_name = self._save_image(image)
         report_for_send = {
             'camera': self.images_folder.split('/')[1],
-            'algorithm_name': os.environ.get("algorithm_name"),
+            'algorithm': os.environ.get("algorithm_name"),
             'start_tracking': start_tracking_time,
             'stop_tracking': stop_tracking_time,
             'photos': [{'image': saved_image_name, 'date': start_tracking_time}],
