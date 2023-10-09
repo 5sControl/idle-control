@@ -15,6 +15,71 @@ Take charge of your team's workforce and ensure maximum productivity. Employees 
 
 **Plug-in Idle control to 5controlS platform to start detecting when your workers are on a phone!**
 
+## Getting started 
+
+### Build image for idle_python algorithm
+- For x86 users
+
+    ```docker build -t 5scontrol/idle_python:latest .```
+
+- for AArch64 users 
+
+    ```docker buildx build --platform linux/amd64 -t 5scontrol/idle_python:latest .```
+
+
+### Build image for idle_python_server algorithm
+
+- For x86 users
+
+    ```docker build -t 5scontrol/idle_python_server:latest ./model_image```
+
+- For AArch64 users 
+
+    ```docker build buildx --platform linux/amd64 -t 5scontrol/idle_python_server:latest ./model_image```
+
+
+
+### Run containers
+
+*Check id of container:* ```docker images```
+
+- For min_max_python
+
+    ```docker run -rm -it idle_python -e <variables>```
+
+- For min_max_python-server
+
+    ```docker run -rm -it idle_python_server```
+
+  To run min_max algorithm you have to pass following variables:
+    - ```folder``` -- folder for saving images
+    - ```camera_url``` -- camera url
+    - ```server_url``` -- server url
+
+
+### Run/Test code
+
+- For idle_python
+
+  ```python main.py```
+
+- For idle_python_server
+
+  ```cd ./idle_model && python -m flask run --host 0.0.0.0 --port 5001```
+
+
+### Push images
+
+- For min_max_python:
+
+  ```docker image push 5scontrol/min_max_python:latest```
+
+- For machine_control_python_server_model:
+
+  ```docker image push 5scontrol/min_max_python-server:latest```
+
+---
+
 # **Project repositories**
 
 The connections between the project repositories are illustrated by the following diagram. 
