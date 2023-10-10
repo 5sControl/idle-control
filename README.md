@@ -78,26 +78,6 @@ Take charge of your team's workforce and ensure maximum productivity. Employees 
 
   ```docker image push 5scontrol/idle_python_server:latest```
 
----
-
-# **Project repositories**
-
-**5controlS Platform:**
-1. [5s-backend](https://github.com/5sControl/5s-backend)
-2. [5s-frontend](https://github.com/5sControl/5s-frontend)
-3. [5s-algorithms-controller](https://github.com/5sControl/5s-algorithms-controller)
-4. [5s-onvif](https://github.com/5sControl/5s-onvif)
-5. [5s-onvif-finder]()
-
-**Official Algorithms:**
-1. [min-max](https://github.com/5sControl/min-max)
-2. [idle-control](https://github.com/5sControl/idle-control)
-3. [operation-control-js](https://github.com/5sControl/operation-control-js)
-4. [machine-control](https://github.com/5sControl/machine-control)
-5. [machine-control-js](https://github.com/5sControl/machine-control-js)
-
-**Algorithms Servers:**
-1. [inference-server-js]()
 
 # **Documentation**
 
@@ -117,6 +97,26 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 If you want to contribute, read  our [contributing guide](CONTRIBUTING.md) to learn about our development process and pull requests workflow.
 
 We also have a list of [good first issues]() that will help you make your first step to beсoming a 5S contributor.
+
+
+# **Project repositories**
+
+**5controlS Platform:**
+1. [5s-backend](https://github.com/5sControl/5s-backend)
+2. [5s-frontend](https://github.com/5sControl/5s-frontend)
+3. [5s-algorithms-controller](https://github.com/5sControl/5s-algorithms-controller)
+4. [5s-onvif](https://github.com/5sControl/5s-onvif)
+5. [5s-onvif-finder]()
+
+**Official Algorithms:**
+1. [min-max](https://github.com/5sControl/min-max)
+2. [idle-control](https://github.com/5sControl/idle-control)
+3. [operation-control-js](https://github.com/5sControl/operation-control-js)
+4. [machine-control](https://github.com/5sControl/machine-control)
+5. [machine-control-js](https://github.com/5sControl/machine-control-js)
+
+**Algorithms Servers:**
+1. [inference-server-js]()
 
 # **License**
 
