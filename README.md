@@ -15,7 +15,7 @@ Take charge of your team's workforce and ensure maximum productivity. Employees 
 
 **Plug-in Idle control to 5controlS platform to start detecting when your workers are on a phone!**
 
-## Getting started 
+# Getting started 
 
 ### Build image for idle_python algorithm
 - For x86 users
@@ -82,14 +82,6 @@ Take charge of your team's workforce and ensure maximum productivity. Employees 
 
 # **Project repositories**
 
-The connections between the project repositories are illustrated by the following diagram. 
-
-> Please note that to ensure system stability and perfomance you can use one of the Official 5S algorithms instead of Your Algorithm.
-
-<p align="center">
-  <img src="https://github.com/5sControl/5s-backend/assets/131950264/60cbc463-ce88-4af2-a4ed-7e3c01f7a955" alt="5controlS-diagram" />
-</p>
-
 **5controlS Platform:**
 1. [5s-backend](https://github.com/5sControl/5s-backend)
 2. [5s-frontend](https://github.com/5sControl/5s-frontend)
@@ -128,7 +120,7 @@ We also have a list of [good first issues]() that will help you make your first 
 
 # **License**
 
-> Please note that [some](Components-with-copyleft-licensies.md) of the Official Algorithms are using copyleft licensies.
+[AGPL-3.0](LICENSE)
 
 
 <br>
@@ -143,15 +135,3 @@ We also have a list of [good first issues]() that will help you make your first 
     <img src="https://github.com/5sControl/Manufacturing-Automatization-Enterprise/blob/ebf176c81fdb62d81b2555cb6228adc074f60be0/assets/youtube%20(1).png" width="5%" alt="" /></a>
 </div>
 
-
-# algorithms-python
-
-```bash
-docker build ./idle_model -t 5scontrol/idle_python_server:v-.-.-
-docker build . -t 5scontrol/idle_python:v-.-.-
-```
-
-```bash
-docker run --network host --rm 5scontrol/idle_python_server:v-.-.-
-docker run --network host --rm 5scontrol/idle_python:v-.-.-
-```
