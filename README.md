@@ -43,15 +43,15 @@ Take charge of your team's workforce and ensure maximum productivity. Employees 
 
 *Check id of container:* ```docker images```
 
-- For min_max_python
+- For idle_python
 
     ```docker run -rm -it idle_python -e <variables>```
 
-- For min_max_python-server
+- For idle_python_server
 
     ```docker run -rm -it idle_python_server```
 
-  To run min_max algorithm you have to pass following variables:
+  To run idle algorithm you have to pass following variables:
     - ```folder``` -- folder for saving images
     - ```camera_url``` -- camera url
     - ```server_url``` -- server url
@@ -70,13 +70,13 @@ Take charge of your team's workforce and ensure maximum productivity. Employees 
 
 ### Push images
 
-- For min_max_python:
+- For idle_python:
 
-  ```docker image push 5scontrol/min_max_python:latest```
+  ```docker image push 5scontrol/idle_python:latest```
 
-- For machine_control_python_server_model:
+- For idle_python_server:
 
-  ```docker image push 5scontrol/min_max_python-server:latest```
+  ```docker image push 5scontrol/idle_python_server:latest```
 
 ---
 
