@@ -13,6 +13,8 @@ Take charge of your team's workforce and ensure maximum productivity. Employees 
 
 **Plug-in Idle control to 5controlS platform to start detecting when your workers are on a phone!**
 
+> Learn more about Idle control on the [5controlS website](https://5controls.com/solutions/employee-monitoring-software).
+
 # Getting started 
 
 ### Build image for idle_python algorithm
