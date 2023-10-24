@@ -3,7 +3,7 @@ Idle control is one of the Official [5controlS](https://5controls.com/) algorith
 
 Take charge of your team's workforce and ensure maximum productivity. Employees spend time on non-work activities, such as social media or phone calls in the workplace? Optimize your team's or company’s efficiency without delay.
 
-![Frame 2608804](https://github.com/5sControl/idle-control/assets/131950264/4f1ceac2-c24f-4738-a6f4-1c0d6532d62d)
+![Idle-control](https://github.com/5sControl/5s-user-documentation/blob/main/assets/Idle-control.png)
 
 
 ## Key features
