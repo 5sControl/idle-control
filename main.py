@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 from IdleAlgorithm import IdleAlgorithm
 import os
 import numpy as np
-import asyncio
 
 
 password = os.environ.get("password")

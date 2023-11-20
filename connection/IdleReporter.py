@@ -39,7 +39,7 @@ class IdleReporter:
         try:
             self.logger.info(str(report))
             requests.post(
-                url=f'{self.server_url}:80/api/reports/report-with-photos/', json=report
+                url=os.environ.get("link_reports"), json=report
             )
         except Exception as exc:
             self.logger.error(f"Cannot send report. Following error raised: {str(exc)}")

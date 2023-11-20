@@ -1,4 +1,3 @@
-import httplib2
 import logging
 import datetime
 import numpy as np
@@ -9,8 +8,6 @@ import requests
 
 class ImageHTTPExtractor:
     def __init__(self, camera_ip: str, logger: logging.Logger, **credentials) -> None:
-        self.http_connection = httplib2.Http(".cache")
-        self.http_connection.add_credentials(credentials.get("username"), credentials.get("password"))
         self.logger = logger
         self.camera_ip = camera_ip
 
