@@ -1,5 +1,5 @@
 # About Idle control
-Idle control is one of the Official [5controlS](https://5controls.com/) algorithm.
+Idle control is one of the Official [5controlS](https://5controls.com/) algorithm. Plug it in our video monitoring system with AI analysis and ERP Integration (Open Source) to uncover employee inefficiencies and minimize downtime.
 
 Take charge of your team's workforce and ensure maximum productivity. Employees spend time on non-work activities, such as social media or phone calls in the workplace? Optimize your team's or company’s efficiency without delay.
 
